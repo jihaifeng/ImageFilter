@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.jihf.camerasdk">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!--  ####重点###重点####重点####    android 7.0 以上需要在配置文件加上一下代码-->
+   <!--
+
+   在res目录下新建一个xml文件夹，并且新建一个file_paths的xml文件
+   参考：https://blog.csdn.net/yy1300326388/article/details/52787853
+
+    <provider
+        android:name="android.support.v4.content.FileProvider"
+        android:authorities="app的包名.fileProvider"
+        android:grantUriPermissions="true"
+        android:exported="false">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths" />
+    </provider>
+    -->
+</manifest>
