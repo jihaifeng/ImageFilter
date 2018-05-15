@@ -92,10 +92,6 @@ public class FragmentViewPagerAdapter extends PagerAdapter implements ViewPager.
     public void onPageScrolled(int i, float v, int i2) {
         if(null != onExtraPageChangeListener){ // 如果设置了额外功能接口
             onExtraPageChangeListener.onExtraPageScrolled(i, v, i2);
-            
-            /*for(int k=0;k<fragments.size();k++){
-            	fragments.get(k).onPause();
-            }*/
         }
     }
 

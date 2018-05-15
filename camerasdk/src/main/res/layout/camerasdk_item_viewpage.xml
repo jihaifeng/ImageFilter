@@ -7,7 +7,7 @@
     	
     	<com.muzhi.camerasdk.library.filter.GPUImageView
 	       	android:id="@+id/effect_main"
-	    	android:layout_gravity="center"
+	    	android:layout_gravity="center|top"
 	    	android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content" />
         

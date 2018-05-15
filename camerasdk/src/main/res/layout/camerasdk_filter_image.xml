@@ -5,19 +5,14 @@
     android:background="@color/camerasdk_main_bg">
 
     <include layout="@layout/camerasdk_actionbar"/>
-    
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center"
         android:layout_weight="1">
 
-	 	<!-- <FrameLayout
-	        android:id="@+id/fragment_container"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent">
-	    </FrameLayout> -->
-	    
+
 	    <com.jihf.camerasdk.view.CustomViewPager
 	        android:id="@+id/viewpager"
 	        android:layout_width="wrap_content"

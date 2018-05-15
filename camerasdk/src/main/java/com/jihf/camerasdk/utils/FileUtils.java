@@ -2,10 +2,16 @@ package com.jihf.camerasdk.utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import com.muzhi.camerasdk.library.utils.CommonUtils;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static android.os.Environment.MEDIA_MOUNTED;
@@ -18,6 +24,9 @@ public class FileUtils {
 
     private static final String JPEG_FILE_PREFIX = "IMG_";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
+
+    private static final String SD_PATH = "/sdcard/Image_Cache/";
+    private static final String IN_PATH = "/Image_Cache/";
 
     public static File createTmpFile(Context context) throws IOException{
         File dir = null;
@@ -126,4 +135,64 @@ public class FileUtils {
         return perm == PackageManager.PERMISSION_GRANTED;
     }
 
+    public static String saveAsBitmap(Context context, Bitmap bitmap) {
+        String folderName = CommonUtils.getApplicationName(context);
+        if(folderName == null || folderName.equals("")) {
+            folderName = "CameraSDK";
+        }
+
+        File parentpath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String fileName = System.currentTimeMillis() + ".jpg";
+        fileName = folderName + "/" + fileName;
+        File file = new File(parentpath, fileName);
+        file.getParentFile().mkdirs();
+
+        try {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(file));
+        } catch (FileNotFoundException var7) {
+            var7.printStackTrace();
+        }
+
+        bitmap.recycle();
+        return file.getAbsolutePath();
+    }
+
+    /**
+     * 保存bitmap到本地
+     *
+     * @param mBitmap
+     * @return
+     */
+    public static String saveBitmap(Context context,Bitmap mBitmap) {
+        String folderPath = getFolderPath(context);
+        File filePic;
+
+        try {
+            filePic = new File(folderPath + System.currentTimeMillis() + ".jpg");
+            if (!filePic.exists()) {
+                filePic.getParentFile().mkdirs();
+                filePic.createNewFile();
+            }
+            FileOutputStream fos = new FileOutputStream(filePic);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+
+        return filePic.getAbsolutePath();
+    }
+
+    private static String getFolderPath(Context context) {
+        String folderPath = "";
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            folderPath = SD_PATH;
+        } else {
+            folderPath = context.getFilesDir().getAbsolutePath() + IN_PATH;
+        }
+        return folderPath;
+    }
 }

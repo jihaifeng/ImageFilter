@@ -30,12 +30,11 @@ public class MainActivity extends Activity {
 		
 		((TextView)findViewById(R.id.camerasdk_actionbar_title)).setText(getString(R.string.app_name));
 		
-        mChoiceMode = (RadioGroup) findViewById(R.id.choice_mode);
-        mShowCamera = (RadioGroup) findViewById(R.id.show_camera);
-        mRequestNum = (EditText) findViewById(R.id.request_num);
-        mCrop = (RadioGroup) findViewById(R.id.rg_crop);
-        mFilter = (RadioGroup) findViewById(R.id.rg_filter);
-        
+        mChoiceMode = findViewById(R.id.choice_mode);
+        mShowCamera = findViewById(R.id.show_camera);
+        mRequestNum = findViewById(R.id.request_num);
+        mCrop = findViewById(R.id.rg_crop);
+        mFilter = findViewById(R.id.rg_filter);
         mChoiceMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {

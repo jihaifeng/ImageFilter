@@ -52,4 +52,14 @@ public class CustomViewPager extends ViewPager {
         this.enabled = enabled;
     }
 
+    public void setCurrentItem(int item, boolean smoothScroll) {
+        // TODO Auto-generated method stub
+        super.setCurrentItem(item, smoothScroll);
+    }
+
+    @Override
+    public void setCurrentItem(int item) {
+        // TODO Auto-generated method stub
+        super.setCurrentItem(item, false);//<span style="color: rgb(70, 70, 70); font-family: 'Microsoft YaHei', 'Helvetica Neue', SimSun; font-size: 14px; line-height: 21px; background-color: rgb(188, 211, 229);">表示切换的时候，不需要切换时间。</span>
+    }
 }
