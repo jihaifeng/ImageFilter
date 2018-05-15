@@ -34,7 +34,7 @@ public class FilterImageActivity extends BaseActivity {
 
     private CameraSdkParameterInfo mCameraSdkParameterInfo = new CameraSdkParameterInfo();
 
-    private HorizontalListView effect_listview, sticker_listview, images_listview;
+    private HorizontalListView effect_listview, sticker_listview;
 
     private TextView tab_effect, tab_sticker, txt_cropper, btn_done, txt_enhance, txt_graffiti;
     private RelativeLayout loading_layout;// 等待框
@@ -77,7 +77,6 @@ public class FilterImageActivity extends BaseActivity {
             setActionBarTitle("编辑图片");
         } else {
             tv_title.setVisibility(View.GONE);
-            findViewById(R.id.images_layout).setVisibility(View.VISIBLE);
         }
 
         initEvent();
@@ -102,7 +101,6 @@ public class FilterImageActivity extends BaseActivity {
         mSeekBar = findViewById(R.id.seekBar);
         effect_listview = findViewById(R.id.effect_listview);
         sticker_listview = findViewById(R.id.sticker_listview);
-        images_listview = findViewById(R.id.images_listview);
         loading_layout = findViewById(R.id.loading);
 
     }
@@ -230,27 +228,6 @@ public class FilterImageActivity extends BaseActivity {
 
             }
         });
-        images_listview.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mViewPager.setCurrentItem(position, false);
-                fragments.get(position).onResume();
-                fragments.get(current).onPause();
-                current = position;
-
-                iAdapter.setSelected(position);
-                final int tmpint = position;
-                final int tmpitem = view.getWidth();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        images_listview.scrollTo(tmpitem * (tmpint - 1) - tmpitem / 4);
-                    }
-                }, 200);
-
-            }
-        });
         mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
             @Override
@@ -298,7 +275,6 @@ public class FilterImageActivity extends BaseActivity {
         eAdapter = new Filter_Effect_Adapter(this, effect_list);
         sAdapter = new Filter_Sticker_Adapter(this, stickerList);
 
-        images_listview.setAdapter(iAdapter);
         iAdapter.setSelected(0);
         effect_listview.setAdapter(eAdapter);
         sticker_listview.setAdapter(sAdapter);

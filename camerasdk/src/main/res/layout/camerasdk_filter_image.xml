@@ -33,8 +33,7 @@
            android:layout_width="match_parent"
            android:layout_height="100dp"
            android:paddingTop="3dip"
-           android:paddingBottom="3dip"
-           android:background="@color/camerasdk_main_tools_bg" >
+           android:paddingBottom="3dip" >
 
            <com.muzhi.camerasdk.library.views.HorizontalListView
                android:id="@+id/effect_listview"
@@ -51,12 +50,13 @@
                android:visibility="gone" />
        </RelativeLayout>
 
-       
+    <View android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#d7d7d7"/>
         <LinearLayout
             android:id="@+id/tab_item_container"
             android:layout_width="match_parent"
             android:layout_height="@dimen/camerasdk_bootom_tab_height"
-            android:background="@color/camerasdk_main_bottom_bg"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
             android:paddingTop="3dip">         

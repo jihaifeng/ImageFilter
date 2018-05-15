@@ -73,7 +73,6 @@ public class PhotoPickActivity extends BaseActivity {
     private TextView mCategoryText, mTimeLineText, button_complate;
     private GridView mGridView;
     private PopupWindow mpopupWindow;
-    private RelativeLayout camera_footer;
     private ImageGridAdapter mImageAdapter;
     private FolderAdapter mFolderAdapter;
     private boolean hasFolderGened = false;
@@ -98,7 +97,6 @@ public class PhotoPickActivity extends BaseActivity {
         initEvent();
         getSupportLoaderManager().restartLoader(LOADER_ALL, null, mLoaderCallback);
 
-
     }
 
     //获取传过来的参数
@@ -121,18 +119,19 @@ public class PhotoPickActivity extends BaseActivity {
         mCategoryText.setCompoundDrawables(null, null, drawable, null);
 
         mTimeLineText = (TextView) findViewById(R.id.timeline_area);
-        button_complate = (TextView) findViewById(R.id.button_complate);
         mGridView = (GridView) findViewById(R.id.gv_list);
-        camera_footer = (RelativeLayout) findViewById(R.id.camera_footer);
 
-        button_complate.setText("完成(0/" + mCameraSdkParameterInfo.getMax_image() + ")");
+        button_complate = findViewById(R.id.camerasdk_title_txv_right_text);
+        button_complate.setVisibility(View.VISIBLE);
+        button_complate.setText("完成(0/" + mCameraSdkParameterInfo.getMax_image() + ")")
+   ;
 
         mImageAdapter = new ImageGridAdapter(mContext, mCameraSdkParameterInfo.isShow_camera(), mCameraSdkParameterInfo.isSingle_mode());
         mGridView.setAdapter(mImageAdapter);
         mFolderAdapter = new FolderAdapter(mContext);
 
         if (mCameraSdkParameterInfo.isSingle_mode()) {
-            camera_footer.setVisibility(View.GONE);
+            button_complate.setVisibility(View.GONE);
         }
     }
 
