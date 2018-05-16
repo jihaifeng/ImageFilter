@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jihf.camerasdk.model.CameraSdkParameterInfo;
+import com.jihf.camerasdk.selector.ImageSelectProxy;
 import com.jihf.imagefilterdemo.R;
 
 
@@ -98,18 +99,15 @@ public class MainActivity extends Activity {
                 startActivityForResult(intent, CameraSdkParameterInfo.TAKE_PICTURE_FROM_GALLERY);
 
 
-
 			}
 		});
 
         findViewById(R.id.button1).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-//                MultiImageSelector.create()
-//                        .count(9)
-//                        .showCamera(true)
-//                        .multi()
-//                        .start(MainActivity.this,100);
+
+                ImageSelectProxy.with(MainActivity.this).maxCount(9).camera(true).gridRowCount(4)
+                        .start();
             }
         });
 

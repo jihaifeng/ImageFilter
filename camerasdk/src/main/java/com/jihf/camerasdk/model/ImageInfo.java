@@ -1,9 +1,11 @@
 package com.jihf.camerasdk.model;
 
+import java.io.Serializable;
+
 /**
  * 图片实体
  */
-public class ImageInfo {
+public class ImageInfo implements Serializable{
     public String path;
     public String name;
     public long time;

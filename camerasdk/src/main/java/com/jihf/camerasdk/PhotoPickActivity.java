@@ -123,8 +123,7 @@ public class PhotoPickActivity extends BaseActivity {
 
         button_complate = findViewById(R.id.camerasdk_title_txv_right_text);
         button_complate.setVisibility(View.VISIBLE);
-        button_complate.setText("完成(0/" + mCameraSdkParameterInfo.getMax_image() + ")")
-   ;
+        button_complate.setText("完成(0/" + mCameraSdkParameterInfo.getMax_image() + ")");
 
         mImageAdapter = new ImageGridAdapter(mContext, mCameraSdkParameterInfo.isShow_camera(), mCameraSdkParameterInfo.isSingle_mode());
         mGridView.setAdapter(mImageAdapter);
@@ -411,14 +410,14 @@ public class PhotoPickActivity extends BaseActivity {
                             folderInfo.path = folderFile.getAbsolutePath();
                             folderInfo.cover = imageInfo;
                             if (!mResultFolder.contains(folderInfo)) {
-                                List<ImageInfo> imageList = new ArrayList<ImageInfo>();
+                                ArrayList<ImageInfo> imageList = new ArrayList<ImageInfo>();
                                 imageList.add(imageInfo);
-                                folderInfo.imageInfos = imageList;
+                                folderInfo.imageList = imageList;
                                 mResultFolder.add(folderInfo);
                             } else {
                                 // 更新
                                 FolderInfo f = mResultFolder.get(mResultFolder.indexOf(folderInfo));
-                                f.imageInfos.add(imageInfo);
+                                f.imageList.add(imageInfo);
                             }
                         }
 
@@ -499,7 +498,7 @@ public class PhotoPickActivity extends BaseActivity {
                         } else {
                             FolderInfo folderInfo = (FolderInfo) mFolderAdapter.getItem(index);
                             if (null != folderInfo) {
-                                mImageAdapter.setData(folderInfo.imageInfos);
+                                mImageAdapter.setData(folderInfo.imageList);
                                 mCategoryText.setText(folderInfo.name);
                                 // 设定默认选择
                                 if (resultList != null && resultList.size() > 0) {

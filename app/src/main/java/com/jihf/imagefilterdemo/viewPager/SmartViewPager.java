@@ -175,7 +175,7 @@ public class SmartViewPager extends ViewPager {
                 vpListener.onDefaultSelect(defaultSelectPos);
             }
         } else {
-//            MyToast.makeText(getContext(), "error:picture is empty", Toast.LENGTH_LONG).show();
+//            CameraToast.makeText(getContext(), "error:picture is empty", Toast.LENGTH_LONG).show();
         }
     }
 

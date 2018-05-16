@@ -103,7 +103,7 @@ public class FolderAdapter extends BaseAdapter {
         int result = 0;
         if(mFolders != null && mFolders.size()>0){
             for (FolderInfo f: mFolders){
-                result += f.imageInfos.size();
+                result += f.imageList.size();
             }
         }
         return result;
@@ -135,7 +135,7 @@ public class FolderAdapter extends BaseAdapter {
 
         void bindData(FolderInfo data) {
             name.setText(data.name);
-            size.setText(data.imageInfos.size()+"张");
+            size.setText(data.imageList.size()+"张");
             // 显示图片
             Glide.with(mContext)
                     .load(new File(data.cover.path))

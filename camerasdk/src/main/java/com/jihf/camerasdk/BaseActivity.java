@@ -22,7 +22,7 @@ public abstract class BaseActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//不可横屏幕
-		
+
 		/*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			setTranslucentStatus(true);
 		}
@@ -30,7 +30,7 @@ public abstract class BaseActivity extends FragmentActivity {
 		SystemBarTintManager tintManager = new SystemBarTintManager(this);
 		tintManager.setStatusBarTintEnabled(true);
 		tintManager.setStatusBarTintResource(R.color.camerasdk_action_bar);*/
-		
+
 		
 	}
 	
@@ -51,7 +51,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	
 	public void setActionBarTitle(String s) {
 		if(mActionBarTitle==null){
-			mActionBarTitle=(TextView)findViewById(MResource.getIdRes(mContext, "camerasdk_actionbar_title"));
+			mActionBarTitle= findViewById(MResource.getIdRes(mContext, "camerasdk_actionbar_title"));
 		}
 		mActionBarTitle.setText(s);
 	}
@@ -59,7 +59,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	//显示返回按钮
 	public void showLeftIcon(){
 		if(btn_back==null){
-			btn_back=(TextView)findViewById(MResource.getIdRes(mContext, "camerasdk_btn_back"));
+			btn_back= findViewById(MResource.getIdRes(mContext, "camerasdk_btn_back"));
 		}
 		btn_back.setVisibility(View.VISIBLE);
 		btn_back.setOnClickListener(new OnClickListener() {
