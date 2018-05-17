@@ -15,7 +15,7 @@ public class FolderInfo implements Serializable{
     public String name;
     public String path;
     public ImageInfo cover;
-    public ArrayList<ImageInfo> imageList;
+    public ArrayList<ImageInfo> imageList = new ArrayList<>();
 
     public FolderInfo() {
     }

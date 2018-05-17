@@ -1,12 +1,18 @@
 package com.jihf.camerasdk.utils;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import com.jihf.camerasdk.PreviewActivity;
 import com.muzhi.camerasdk.library.utils.CommonUtils;
 
 import java.io.File;
@@ -28,9 +34,9 @@ public class FileUtils {
     private static final String SD_PATH = "/sdcard/Image_Cache/";
     private static final String IN_PATH = "/Image_Cache/";
 
-    public static File createTmpFile(Context context) throws IOException{
+    public static File createTmpFile(Context context) throws IOException {
         File dir = null;
-        if(TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+        if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
             dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
             if (!dir.exists()) {
                 dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/Camera");
@@ -38,7 +44,7 @@ public class FileUtils {
                     dir = getCacheDirectory(context, true);
                 }
             }
-        }else{
+        } else {
             dir = getCacheDirectory(context, true);
         }
         return File.createTempFile(JPEG_FILE_PREFIX, JPEG_FILE_SUFFIX, dir);
@@ -100,7 +106,7 @@ public class FileUtils {
      * created on SD card <i>("/Android/data/[app_package_name]/cache/uil-images")</i> if card is mounted and app has
      * appropriate permission. Else - Android defines cache directory on device's file system.
      *
-     * @param context Application context
+     * @param context  Application context
      * @param cacheDir Cache directory path (e.g.: "AppCacheDir", "AppDir/cache/images")
      * @return Cache {@link File directory}
      */
@@ -137,7 +143,7 @@ public class FileUtils {
 
     public static String saveAsBitmap(Context context, Bitmap bitmap) {
         String folderName = CommonUtils.getApplicationName(context);
-        if(folderName == null || folderName.equals("")) {
+        if (folderName == null || folderName.equals("")) {
             folderName = "CameraSDK";
         }
 
@@ -163,7 +169,7 @@ public class FileUtils {
      * @param mBitmap
      * @return
      */
-    public static String saveBitmap(Context context,Bitmap mBitmap) {
+    public static String saveBitmap(Context context, Bitmap mBitmap) {
         String folderPath = getFolderPath(context);
         File filePic;
 
@@ -194,5 +200,24 @@ public class FileUtils {
             folderPath = context.getFilesDir().getAbsolutePath() + IN_PATH;
         }
         return folderPath;
+    }
+
+    public static void deleteFile(Context context, File file) {
+        String filePath = file.getPath(); //获取到的图片完整路径（例子）
+        if (!TextUtils.isEmpty(filePath)) {
+            Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            ContentResolver mContentResolver = context.getContentResolver();
+            String where = MediaStore.Images.Media.DATA + "='" + filePath + "'";
+            //删除图片
+            mContentResolver.delete(uri, where, null);
+
+            scanFileAsync(context, filePath);
+        }
+    }
+
+    public static void scanFileAsync(Context ctx, String filePath) {
+        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        scanIntent.setData(Uri.fromFile(new File(filePath)));
+        ctx.sendBroadcast(scanIntent);
     }
 }

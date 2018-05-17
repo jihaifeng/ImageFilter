@@ -45,6 +45,7 @@ public class ImageSelectProxy {
         private int gridRowCount = 3;
         private ArrayList<ImageInfo> selectList = new ArrayList<>();
         private boolean camera;
+        private ImageSelectCallback callback;
 
 
         public Builder(Activity activity) {
@@ -76,6 +77,15 @@ public class ImageSelectProxy {
         public ImageSelectProxy.Builder camera(boolean camera) {
             this.camera = camera;
             return this;
+        }
+
+        public ImageSelectProxy.Builder callback(ImageSelectCallback callback) {
+            this.callback = callback;
+            return this;
+        }
+
+        public ImageSelectCallback getCallback() {
+            return callback;
         }
 
         public boolean needCamera() {

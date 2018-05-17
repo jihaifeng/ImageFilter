@@ -3,32 +3,25 @@ package com.jihf.camerasdk.selector;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jihf.camerasdk.PhotoPickActivity;
 import com.jihf.camerasdk.R;
 import com.jihf.camerasdk.base.BaseCameraActivity;
-import com.jihf.camerasdk.model.CameraSdkParameterInfo;
 import com.jihf.camerasdk.model.FolderInfo;
 import com.jihf.camerasdk.model.ImageInfo;
 import com.jihf.camerasdk.selector.adapter.CameraFolderAdapter;
@@ -48,7 +41,7 @@ import java.util.ArrayList;
  * Mail：jihaifeng@meechao.com
  */
 public class ImageSelectActivity extends BaseCameraActivity {
-
+    private static final String TAG = ImageSelectActivity.class.getSimpleName().trim();
     private ArrayList<FolderInfo> folderList;
     private ImageSelectProxy.Builder builder;
 
@@ -94,12 +87,14 @@ public class ImageSelectActivity extends BaseCameraActivity {
         imageAdapter.setOnItemClickListener(new CameraImageAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(ImageInfo image, int position) {
-                showToast("click");
                 if (image.name.equalsIgnoreCase(CAMERA_PLACE_HOLDER)) {
-                    showToast("相机");
                     requestPermission(new String[]{Manifest.permission.CAMERA}, CODE_CAMERA_PERMISSION);
                 } else {
-                    showToast("preView");
+                    if (builder.getMaxCount() == 1){
+                        selectComplete();
+                    }else {
+                        showToast("preView");
+                    }
                 }
             }
         });
@@ -110,6 +105,8 @@ public class ImageSelectActivity extends BaseCameraActivity {
                 setSelectImageCount(selectCount);
             }
         });
+
+//        imageAdapter.setSelectedImages(builder.getSelectList());
 
         setSelectImageCount(imageAdapter.getSelectImages().size());
 
@@ -199,27 +196,24 @@ public class ImageSelectActivity extends BaseCameraActivity {
 
     private void setSelectImageCount(int count) {
         if (builder.getMaxCount() != 1) {
-            if (builder.getMaxCount() > 0) {
+           if (builder.getMaxCount() > 0) {
                 setTvCameraNext(String.format("确定(%s/%s)", count, builder.getMaxCount()), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        doNext();
+                        selectComplete();
                     }
                 });
             } else {
                 setTvCameraNext(String.format("确定(%s)", count), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        doNext();
+                        selectComplete();
                     }
                 });
             }
         }
     }
 
-    private void doNext() {
-        showToast("next");
-    }
 
     @Override
     public void permissionFail(int requestCode) {
@@ -260,7 +254,7 @@ public class ImageSelectActivity extends BaseCameraActivity {
 
         imageAdapter.refresh(formatImageData(curFolder.imageList));
 
-        imageAdapter.setSelectedImages(imageAdapter.getSelectImages());
+        imageAdapter.setSelectedImages(builder.getSelectList());
 
     }
 
@@ -311,32 +305,98 @@ public class ImageSelectActivity extends BaseCameraActivity {
             if (resultCode == Activity.RESULT_OK) {
                 if (mTmpFile != null) {
 
-                    //加入content provider
-                    ContentValues values = new ContentValues(7);
-                    values.put(MediaStore.Images.Media.TITLE, System.currentTimeMillis());
-                    values.put(MediaStore.Images.Media.DISPLAY_NAME, "");
-                    values.put(MediaStore.Images.Media.DATE_TAKEN, "");
-                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-                    values.put(MediaStore.Images.Media.ORIENTATION, 0);
-                    values.put(MediaStore.Images.Media.DATA, mTmpFile.getPath());
-                    values.put(MediaStore.Images.Media.SIZE, mTmpFile.length());
-                    getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+                    String folderName = ImageUtil.getFolderName(mTmpFile.getPath());
+                    boolean containsFlag = false;
+                    FolderInfo _folder = null;
+
+                    FolderInfo allImageFolder = null;
+                    for (FolderInfo _f : folderList) {
+                        Log.i(TAG, "onActivityResult: " + _f.name);
+                        Log.i(TAG, "onActivityResult: " + folderName);
+                        if (_f.name.equalsIgnoreCase("全部图片")) {
+                            allImageFolder = _f;
+                        }
+                        if (_f.name.equalsIgnoreCase(folderName)) {
+                            containsFlag = true;
+                            _folder = _f;
+                        }
+                    }
+                    if (!containsFlag) {
+                        _folder = new FolderInfo(folderName);
+                        folderList.add(_folder);
+                        folderAdapter.notifyDataSetChanged();
+                    }
+
+                    ImageInfo imageInfo = new ImageInfo(mTmpFile.getPath(), mTmpFile.getName(), System.currentTimeMillis());
+                    _folder.imageList.add(0, imageInfo);
+
+
+                    if (null != allImageFolder) {
+                        allImageFolder.imageList.add(1, imageInfo);
+                        imageAdapter.notifyDataSetChanged();
+                    }
 
                     if (builder.getMaxCount() == 1) {
-                        //                        resultList.clear();
-                        //                        resultList.add(mTmpFile.getPath());
-                        //                        selectComplate();
+                        selectComplete();
                     } else {
-                        imageAdapter.getSelectImages().add(new ImageInfo(mTmpFile.getPath(), mTmpFile.getName(), System.currentTimeMillis()));
+                        imageAdapter.getSelectImages().add(imageInfo);
                         imageAdapter.notifyDataSetChanged();
+                        setSelectImageCount(imageAdapter.getSelectImages().size());
+
                     }
                 }
             } else {
                 if (mTmpFile != null && mTmpFile.exists()) {
-                    mTmpFile.delete();
+                    FileUtils.deleteFile(this, mTmpFile);
                 }
             }
         }
+    }
+
+
+    //选择完成实现跳转
+    private void selectComplete() {
+        if (null != builder.getCallback()){
+            builder.getCallback().imageCallBack(imageAdapter.getSelectImages());
+        }
+        this.finish();
+
+//        Bundle b = new Bundle();
+//        b.putSerializable(CameraSdkParameterInfo.EXTRA_PARAMETER, mCameraSdkParameterInfo);
+//
+//        Intent intent = new Intent();
+//        intent.putExtras(b);
+
+//        if (builder.getMaxCount() == 1) {
+//            //单选模式
+//            if (mCameraSdkParameterInfo.isCroper_image()) {
+//                //跳转到图片裁剪
+//                intent = new Intent(this, CropperImageActivity.class);
+//                intent.putExtras(b);
+//                startActivity(intent);
+//            } else if (mCameraSdkParameterInfo.isFilter_image()) {
+//                //跳转到滤镜
+//                intent = new Intent(this, FilterImageActivity.class);
+//                intent.putExtras(b);
+//                startActivity(intent);
+//            } else {
+//                setResult(RESULT_OK, intent);
+//                finish();
+//            }
+//        } else {
+//            //多选模式
+//            if (mCameraSdkParameterInfo.isFilter_image()) {
+//                //跳转到滤镜
+//                intent = new Intent(this, FilterImageActivity.class);
+//                intent.putExtras(b);
+//                startActivity(intent);
+//            } else {
+//                setResult(RESULT_OK, intent);
+//                finish();
+//            }
+//        }
+
     }
 
 }
