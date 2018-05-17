@@ -67,7 +67,7 @@ public class ImageFilterActivity extends BaseCameraActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.camerasdk_filter_image;
+        return R.layout.activity_image_filter;
     }
 
     @Override
