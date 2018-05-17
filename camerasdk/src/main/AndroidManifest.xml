@@ -29,5 +29,8 @@
     -->
     <application >
         <activity android:name=".selector.ImageSelectActivity" />
+        <activity android:name="ImageFilterActivity" />
+        <activity android:name=".edit.ImageFilterActivity" />
+        <activity android:name=".ResultActivity1" />
     </application>
 </manifest>

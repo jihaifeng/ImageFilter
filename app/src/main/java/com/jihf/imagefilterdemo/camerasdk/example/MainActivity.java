@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -13,6 +12,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jihf.camerasdk.edit.ImageEditCallback;
+import com.jihf.camerasdk.edit.ImageEditProxy;
 import com.jihf.camerasdk.model.CameraSdkParameterInfo;
 import com.jihf.camerasdk.model.ImageInfo;
 import com.jihf.camerasdk.selector.ImageSelectCallback;
@@ -113,15 +114,21 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                ImageSelectProxy.with(MainActivity.this)
-                        .maxCount(9)
-                        .selectList(imageInfos)
-                        .camera(true)
-                        .callback(new ImageSelectCallback() {
+                ImageSelectProxy.with(MainActivity.this).maxCount(9).selectList(imageInfos).camera(true).callback(new ImageSelectCallback() {
                     @Override
                     public void imageCallBack(ArrayList<ImageInfo> imageList) {
                         imageInfos = imageList;
-                        Log.i(TAG, "imageCallBack: " + imageList.size());
+                        ArrayList<String> imageStrList = new ArrayList<>();
+                        for (ImageInfo i : imageList) {
+                            imageStrList.add(i.path);
+                        }
+                        ImageEditProxy.with(MainActivity.this).imageList(imageStrList).editCallback(new ImageEditCallback() {
+                            @Override
+                            public void imageEditCallback(ArrayList<String> editImageList) {
+
+                                ResultActivityTwo.start(MainActivity.this,editImageList);
+                            }
+                        }).start();
                     }
                 }).gridRowCount(4).start();
             }

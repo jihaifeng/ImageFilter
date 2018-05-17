@@ -26,7 +26,7 @@ public class ImageSelectProxy {
 
 
     public ImageSelectProxy(ImageSelectProxy.Builder builder) {
-        this.mBuilder = builder;
+        mBuilder = builder;
     }
 
     public static Builder getBuilder() {
@@ -39,7 +39,7 @@ public class ImageSelectProxy {
     }
 
 
-    public static class Builder {
+  public  static class Builder {
         private Activity activity;
         private int maxCount = -1;
         private int gridRowCount = 3;

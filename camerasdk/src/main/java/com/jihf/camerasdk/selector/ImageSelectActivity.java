@@ -90,9 +90,9 @@ public class ImageSelectActivity extends BaseCameraActivity {
                 if (image.name.equalsIgnoreCase(CAMERA_PLACE_HOLDER)) {
                     requestPermission(new String[]{Manifest.permission.CAMERA}, CODE_CAMERA_PERMISSION);
                 } else {
-                    if (builder.getMaxCount() == 1){
+                    if (builder.getMaxCount() == 1) {
                         selectComplete();
-                    }else {
+                    } else {
                         showToast("preView");
                     }
                 }
@@ -106,7 +106,7 @@ public class ImageSelectActivity extends BaseCameraActivity {
             }
         });
 
-//        imageAdapter.setSelectedImages(builder.getSelectList());
+        //        imageAdapter.setSelectedImages(builder.getSelectList());
 
         setSelectImageCount(imageAdapter.getSelectImages().size());
 
@@ -196,7 +196,7 @@ public class ImageSelectActivity extends BaseCameraActivity {
 
     private void setSelectImageCount(int count) {
         if (builder.getMaxCount() != 1) {
-           if (builder.getMaxCount() > 0) {
+            if (builder.getMaxCount() > 0) {
                 setTvCameraNext(String.format("确定(%s/%s)", count, builder.getMaxCount()), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -243,18 +243,23 @@ public class ImageSelectActivity extends BaseCameraActivity {
     }
 
     private void setImageData() {
-        if (null == folderList || folderList.size() <= 0) {
-            showToast("没有图片");
-            return;
+        try {
+            if (null == folderList || folderList.size() <= 0) {
+                showToast("没有图片");
+                return;
+            }
+
+            folderAdapter.refresh(folderList);
+
+            setTitleData();
+
+            imageAdapter.refresh(formatImageData(curFolder.imageList));
+
+            imageAdapter.setSelectedImages(builder.getSelectList());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        folderAdapter.refresh(folderList);
-
-        setTitleData();
-
-        imageAdapter.refresh(formatImageData(curFolder.imageList));
-
-        imageAdapter.setSelectedImages(builder.getSelectList());
 
     }
 
@@ -357,45 +362,45 @@ public class ImageSelectActivity extends BaseCameraActivity {
 
     //选择完成实现跳转
     private void selectComplete() {
-        if (null != builder.getCallback()){
+        if (null != builder.getCallback()) {
             builder.getCallback().imageCallBack(imageAdapter.getSelectImages());
         }
         this.finish();
 
-//        Bundle b = new Bundle();
-//        b.putSerializable(CameraSdkParameterInfo.EXTRA_PARAMETER, mCameraSdkParameterInfo);
-//
-//        Intent intent = new Intent();
-//        intent.putExtras(b);
+        //        Bundle b = new Bundle();
+        //        b.putSerializable(CameraSdkParameterInfo.EXTRA_PARAMETER, mCameraSdkParameterInfo);
+        //
+        //        Intent intent = new Intent();
+        //        intent.putExtras(b);
 
-//        if (builder.getMaxCount() == 1) {
-//            //单选模式
-//            if (mCameraSdkParameterInfo.isCroper_image()) {
-//                //跳转到图片裁剪
-//                intent = new Intent(this, CropperImageActivity.class);
-//                intent.putExtras(b);
-//                startActivity(intent);
-//            } else if (mCameraSdkParameterInfo.isFilter_image()) {
-//                //跳转到滤镜
-//                intent = new Intent(this, FilterImageActivity.class);
-//                intent.putExtras(b);
-//                startActivity(intent);
-//            } else {
-//                setResult(RESULT_OK, intent);
-//                finish();
-//            }
-//        } else {
-//            //多选模式
-//            if (mCameraSdkParameterInfo.isFilter_image()) {
-//                //跳转到滤镜
-//                intent = new Intent(this, FilterImageActivity.class);
-//                intent.putExtras(b);
-//                startActivity(intent);
-//            } else {
-//                setResult(RESULT_OK, intent);
-//                finish();
-//            }
-//        }
+        //        if (builder.getMaxCount() == 1) {
+        //            //单选模式
+        //            if (mCameraSdkParameterInfo.isCroper_image()) {
+        //                //跳转到图片裁剪
+        //                intent = new Intent(this, CropperImageActivity.class);
+        //                intent.putExtras(b);
+        //                startActivity(intent);
+        //            } else if (mCameraSdkParameterInfo.isFilter_image()) {
+        //                //跳转到滤镜
+        //                intent = new Intent(this, FilterImageActivity.class);
+        //                intent.putExtras(b);
+        //                startActivity(intent);
+        //            } else {
+        //                setResult(RESULT_OK, intent);
+        //                finish();
+        //            }
+        //        } else {
+        //            //多选模式
+        //            if (mCameraSdkParameterInfo.isFilter_image()) {
+        //                //跳转到滤镜
+        //                intent = new Intent(this, FilterImageActivity.class);
+        //                intent.putExtras(b);
+        //                startActivity(intent);
+        //            } else {
+        //                setResult(RESULT_OK, intent);
+        //                finish();
+        //            }
+        //        }
 
     }
 

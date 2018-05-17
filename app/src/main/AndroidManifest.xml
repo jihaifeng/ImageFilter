@@ -45,8 +45,8 @@
         <activity android:name="com.jihf.camerasdk.CutActivity" />
         <activity android:name="com.jihf.camerasdk.PhotoEnhanceActivity" />
         <activity android:name="com.jihf.camerasdk.GraffitiActivity" />
-
-
+        <activity android:name=".camerasdk.example.ResultActivity1" />
+        <activity android:name=".camerasdk.example.ResultActivityTwo" />
 
 
     </application>
