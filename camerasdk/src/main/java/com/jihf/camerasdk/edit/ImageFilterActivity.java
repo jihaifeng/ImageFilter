@@ -35,6 +35,7 @@ import com.muzhi.camerasdk.library.filter.util.ImageFilterTools;
 import com.muzhi.camerasdk.library.views.HorizontalListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ImageFilterActivity extends BaseCameraActivity {
 
@@ -60,6 +61,7 @@ public class ImageFilterActivity extends BaseCameraActivity {
     private FragmentViewPagerAdapter fAdapter;
     private CustomViewPager mViewPager;
     private ArrayList<Fragment> fragments;
+    private HashMap<Integer,Integer> filterMap = new HashMap<>();
 
     private int current = 0;
 
@@ -141,14 +143,6 @@ public class ImageFilterActivity extends BaseCameraActivity {
                 startActivityForResult(intent, Constants.RequestCode_Croper);
             }
         });
-        //        btn_done.setOnClickListener(new OnClickListener() {
-        //
-        //            @Override
-        //            public void onClick(View v) {
-        //                // TODO 贴纸Tab
-        //                complate();
-        //            }
-        //        });
         txt_enhance.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -190,6 +184,8 @@ public class ImageFilterActivity extends BaseCameraActivity {
                 Filter_Effect_Info info = effect_list.get(arg2);
                 GPUImageFilter filter = ImageFilterTools.createFilterForType(mContext, info.getFilterType());
                 ((EfectFragment) fragments.get(current)).addEffect(filter);
+
+                filterMap.put(current,arg2);
             }
         });
 
@@ -217,6 +213,8 @@ public class ImageFilterActivity extends BaseCameraActivity {
                 current = position;
 
                 iAdapter.setSelected(position);
+
+                eAdapter.setSelectItem(filterMap.get(position));
             }
 
             @Override
@@ -252,6 +250,7 @@ public class ImageFilterActivity extends BaseCameraActivity {
         for (int i = 0; i < imageList.size(); i++) {
             EfectFragment ef1 = EfectFragment.newInstance(imageList.get(i), flag);
             fragments.add(ef1);
+            filterMap.put(i,0);
         }
 
         fAdapter = new FragmentViewPagerAdapter(getSupportFragmentManager(), mViewPager, fragments);
